@@ -12,13 +12,15 @@ if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
 # Ensure Playwright Browsers are Installed (Critical for Streamlit Cloud)
+# Ensure Playwright Browsers are Installed (Critical for Streamlit Cloud)
 try:
     import subprocess
-    # Check if we can run a simple playwright command, if fails, install
-    # Just blindly installing on startup is safer for ephemeral cloud envs
-    # Using --with-deps to ensure system dependencies are also there if needed
-    # This is CRITICAL for Linux environments like Streamlit Cloud to avoid "error while loading shared libraries"
-    subprocess.run([sys.executable, "-m", "playwright", "install", "--with-deps", "chromium"], check=True)
+    # force location to be within user directory to avoid permission issues
+    os.environ["PLAYWRIGHT_BROWSERS_PATH"] = os.path.join(os.getcwd(), ".playwright")
+    
+    # Just install chromium
+    print(f"Installing Playwright browsers to {os.environ['PLAYWRIGHT_BROWSERS_PATH']}...")
+    subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
 except Exception as e:
     print(f"⚠️ Failed to auto-install Playwright browsers: {e}")
 
