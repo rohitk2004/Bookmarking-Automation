@@ -13,16 +13,18 @@ if sys.platform == "win32":
 
 # Ensure Playwright Browsers are Installed (Critical for Streamlit Cloud)
 # Ensure Playwright Browsers are Installed (Critical for Streamlit Cloud)
-try:
-    import subprocess
-    # force location to be within user directory to avoid permission issues
-    os.environ["PLAYWRIGHT_BROWSERS_PATH"] = os.path.join(os.getcwd(), ".playwright")
-    
-    # Just install chromium
-    print(f"Installing Playwright browsers to {os.environ['PLAYWRIGHT_BROWSERS_PATH']}...")
-    subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
-except Exception as e:
-    print(f"⚠️ Failed to auto-install Playwright browsers: {e}")
+# Skip on Windows dev machine to prevent unnecessary re-installs/restarts
+if sys.platform != "win32":
+    try:
+        import subprocess
+        # force location to be within user directory to avoid permission issues
+        os.environ["PLAYWRIGHT_BROWSERS_PATH"] = os.path.join(os.getcwd(), ".playwright")
+        
+        # Just install chromium
+        print(f"Installing Playwright browsers to {os.environ['PLAYWRIGHT_BROWSERS_PATH']}...")
+        subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+    except Exception as e:
+        print(f"⚠️ Failed to auto-install Playwright browsers: {e}")
 
 # Configuration
 st.set_page_config(page_title="Antigravity Bookmarker", page_icon="🚀", layout="wide")
