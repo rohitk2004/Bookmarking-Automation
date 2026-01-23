@@ -11,6 +11,16 @@ import sys
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
+# Ensure Playwright Browsers are Installed (Critical for Streamlit Cloud)
+try:
+    import subprocess
+    # Check if we can run a simple playwright command, if fails, install
+    # Just blindly installing on startup is safer for ephemeral cloud envs
+    # Using --with-deps to ensure system dependencies are also there if needed
+    subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+except Exception as e:
+    print(f"⚠️ Failed to auto-install Playwright browsers: {e}")
+
 # Configuration
 st.set_page_config(page_title="Antigravity Bookmarker", page_icon="🚀", layout="wide")
 
