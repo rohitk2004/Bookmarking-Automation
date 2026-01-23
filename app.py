@@ -17,7 +17,8 @@ try:
     # Check if we can run a simple playwright command, if fails, install
     # Just blindly installing on startup is safer for ephemeral cloud envs
     # Using --with-deps to ensure system dependencies are also there if needed
-    subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+    # This is CRITICAL for Linux environments like Streamlit Cloud to avoid "error while loading shared libraries"
+    subprocess.run([sys.executable, "-m", "playwright", "install", "--with-deps", "chromium"], check=True)
 except Exception as e:
     print(f"⚠️ Failed to auto-install Playwright browsers: {e}")
 
