@@ -159,10 +159,17 @@ if start_btn:
                         progress_bar.progress(current / total)
                         status_log.write(f"**[{current}/{total}]** {message}")
 
+                    # Force Headless on Linux/Cloud environments (no display)
+                    # On Windows (Local), respect the user's checkbox
+                    is_headless = headless
+                    if sys.platform != "win32":
+                         is_headless = True
+                         st.toast("☁️ Cloud Environment detected: Forcing Headless Mode", icon="ℹ️")
+
                     await run_batch_submission(
                         urls=urls, 
                         site_configs=site_configs,
-                        headless=headless,
+                        headless=is_headless,
                         progress_callback=update_progress
                     )
                 
